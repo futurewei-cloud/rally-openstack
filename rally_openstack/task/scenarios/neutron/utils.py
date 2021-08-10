@@ -252,6 +252,14 @@ class NeutronScenario(NeutronBaseScenario):
         return {"router": self.neutron.update_router(
             router["router"]["id"], **router_update_args)}
 
+    def _add_extra_routes(self, router, routes_args):
+        return {"router": self.neutron.add_extra_routes_to_router(
+            router["router"]["id"], **routes_args)}
+
+    def _remove_extra_routes(self, router, routes_args):
+        return {"router": self.neutron.remove_extra_routes_from_router(
+            router["router"]["id"], **routes_args)}
+
     def _create_port(self, network, port_create_args):
         """Create neutron port.
 

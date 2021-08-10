@@ -769,6 +769,38 @@ class NeutronService(service.Service):
 
         return self.client.update_router(router_id, {"router": body})["router"]
 
+    @atomic.action_timer("neutron.add_extra_routes_to_router")
+    def add_extra_routes_to_router(self, router_id, destination=_NONE, nexthop=_NONE):
+        body = {
+                "newRoutesWebRequest": {
+                    "routes": [
+                            {
+                                "destination": destination,
+                                "nexthop": nexthop
+                            }
+                        ]
+                }
+            }
+        if not body:
+            raise TypeError("No updates for routes.")
+        return self.client.add_extra_routes_to_router(router_id, body)["router"]
+
+    @atomic.action_timer("neutron.add_extra_routes_to_router")
+    def remove_extra_routes_from_router(self, router_id, destination=_NONE, nexthop=_NONE):
+        body = {
+                "newRoutesWebRequest": {
+                    "routes": [
+                            {
+                                "destination": destination,
+                                "nexthop": nexthop
+                            }
+                        ]
+                }
+            }
+        if not body:
+            raise TypeError("No updates for routes.")
+        return self.client.remove_extra_routes_from_router(router_id, body)["router"]
+
     @atomic.action_timer("neutron.delete_router")
     def delete_router(self, router_id):
         """Delete router
