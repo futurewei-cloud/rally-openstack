@@ -183,6 +183,12 @@ class NeutronScenario(NeutronBaseScenario):
         """
         return {"subnet": self.neutron.get_subnet(subnet["subnet"]["id"])}
 
+    def _update_subnet_routetable(self, subnet_id, routetable_args):
+        return self.neutron.update_subnet_routetable(subnet_id, **routetable_args)
+
+    def _delete_subnet_routetable(self, subnet_id):
+        return self.neutron.delete_subnet_routetable(subnet_id)
+
     def _update_subnet(self, subnet, subnet_update_args):
         """Update the neutron subnet.
 
