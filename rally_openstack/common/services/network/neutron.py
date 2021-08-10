@@ -13,6 +13,7 @@
 #    under the License.
 
 import itertools
+import ipaddress
 
 from rally.common import cfg
 from rally.common import logging
@@ -781,8 +782,11 @@ class NeutronService(service.Service):
                         ]
                 }
             }
-        if not body:
-            raise TypeError("No updates for routes.")
+        try:
+            d = ipaddress.ip_network(destination)
+            n = ipaddress.ip_address(nexthop)
+        except:
+            print("Routing rule not correct")
         return self.client.add_extra_routes_to_router(router_id, body)["router"]
 
     @atomic.action_timer("neutron.add_extra_routes_to_router")
@@ -797,8 +801,11 @@ class NeutronService(service.Service):
                         ]
                 }
             }
-        if not body:
-            raise TypeError("No updates for routes.")
+        try:
+            d = ipaddress.ip_network(destination)
+            n = ipaddress.ip_address(nexthop)
+        except:
+            print("Routing rule not correct")
         return self.client.remove_extra_routes_from_router(router_id, body)["router"]
 
     @atomic.action_timer("neutron.delete_router")
