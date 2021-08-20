@@ -183,6 +183,12 @@ class NeutronScenario(NeutronBaseScenario):
         """
         return {"subnet": self.neutron.get_subnet(subnet["subnet"]["id"])}
 
+    def _update_subnet_routetable(self, subnet_id, routetable_args):
+        return self.neutron.update_subnet_routetable(subnet_id, **routetable_args)
+
+    def _delete_subnet_routetable(self, subnet_id):
+        return self.neutron.delete_subnet_routetable(subnet_id)
+
     def _update_subnet(self, subnet, subnet_update_args):
         """Update the neutron subnet.
 
@@ -251,6 +257,14 @@ class NeutronScenario(NeutronBaseScenario):
         router_update_args["name"] = self.generate_random_name()
         return {"router": self.neutron.update_router(
             router["router"]["id"], **router_update_args)}
+
+    def _add_extra_routes(self, router, routes_args):
+        return {"router": self.neutron.add_extra_routes_to_router(
+            router["router"]["id"], **routes_args)}
+
+    def _remove_extra_routes(self, router, routes_args):
+        return {"router": self.neutron.remove_extra_routes_from_router(
+            router["router"]["id"], **routes_args)}
 
     def _create_port(self, network, port_create_args):
         """Create neutron port.

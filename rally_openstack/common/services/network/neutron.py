@@ -13,6 +13,7 @@
 #    under the License.
 
 import itertools
+import ipaddress
 
 from rally.common import cfg
 from rally.common import logging
@@ -768,6 +769,44 @@ class NeutronService(service.Service):
             raise TypeError("No updates for a router.")
 
         return self.client.update_router(router_id, {"router": body})["router"]
+
+    @atomic.action_timer("neutron.add_extra_routes_to_router")
+    def add_extra_routes_to_router(self, router_id, destination=_NONE, nexthop=_NONE):
+        body = {
+                "newRoutesWebRequest": {
+                    "routes": [
+                            {
+                                "destination": destination,
+                                "nexthop": nexthop
+                            }
+                        ]
+                }
+            }
+        try:
+            d = ipaddress.ip_network(destination)
+            n = ipaddress.ip_address(nexthop)
+        except:
+            print("Routing rule not correct")
+        return self.client.add_extra_routes_to_router(router_id, body)["router"]
+
+    @atomic.action_timer("neutron.remove_extra_routes_from_router")
+    def remove_extra_routes_from_router(self, router_id, destination=_NONE, nexthop=_NONE):
+        body = {
+                "newRoutesWebRequest": {
+                    "routes": [
+                            {
+                                "destination": destination,
+                                "nexthop": nexthop
+                            }
+                        ]
+                }
+            }
+        try:
+            d = ipaddress.ip_network(destination)
+            n = ipaddress.ip_address(nexthop)
+        except:
+            print("Routing rule not correct")
+        return self.client.remove_extra_routes_from_router(router_id, body)["router"]
 
     @atomic.action_timer("neutron.delete_router")
     def delete_router(self, router_id):
